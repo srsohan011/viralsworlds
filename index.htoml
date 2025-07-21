@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Video with Verification Popup</title>
+<style>
+  body, html {
+    margin: 0; padding: 0; height: 100%; background: #121212; display: flex; justify-content: center; align-items: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  #video-container {
+    position: relative;
+    width: 80vw;
+    max-width: 900px;
+    aspect-ratio: 16 / 9;
+    background: black;
+  }
+  video {
+    width: 100%;
+    height: 100%;
+    background: black;
+  }
+  /* Popup overlay */
+  #popup-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+    font-size: 1.2rem;
+    z-index: 10;
+    border-radius: 8px;
+  }
+  #popup-overlay a {
+    display: inline-block;
+    margin: 15px 0 10px 0;
+    color: #1877F2;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 1.3rem;
+    border: 2px solid #1877F2;
+    padding: 10px 20px;
+    border-radius: 6px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  #popup-overlay a:hover {
+    background-color: #1877F2;
+    color: white;
+  }
+  #countdown {
+    font-size: 1.5rem;
+    margin-top: 10px;
+  }
+  #back-button {
+    display: none;
+    margin-top: 20px;
+    padding: 10px 25px;
+    font-size: 1.1rem;
+    background-color: #1877F2;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  #back-button:hover {
+    background-color: #155db2;
+  }
+</style>
+</head>
+<body>
+
+<div id="video-container">
+  <video id="myVideo" controls preload="metadata" poster="https://via.placeholder.com/1280x720.png?text=Demo+Video" >
+    <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" type="video/webm" />
+    <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+
+  <div id="popup-overlay">
+    <div>
+      Please verify by clicking the link below:
+    </div>
+    <a href="https://www.facebook.com/srsohan07m" target="_blank" id="verify-link">Click For Watch Now</a>
+    <div id="countdown"></div>
+    <button id="back-button">Back to Video</button>
+  </div>
+</div>
+
+<script>
+  const popup = document.getElementById('popup-overlay');
+  const verifyLink = document.getElementById('verify-link');
+  const countdownEl = document.getElementById('countdown');
+  const backBtn = document.getElementById('back-button');
+  const video = document.getElementById('myVideo');
+
+  let countdown = 8;
+  let countdownInterval;
+
+  // Initially pause video
+  video.pause();
+
+  verifyLink.addEventListener('click', () => {
+    // Start countdown on link click
+    countdown = 5;
+    countdownEl.textContent = `Verification starts... ${countdown}s`;
+    backBtn.style.display = 'none';
+
+    countdownInterval = setInterval(() => {
+      countdown--;
+      if(countdown > 0) {
+        countdownEl.textContent = `Verification in progress... ${countdown}s`;
+      } else {
+        clearInterval(countdownInterval);
+        countdownEl.textContent = 'Verification complete!';
+        backBtn.style.display = 'inline-block';
+      }
+    }, 1000);
+  });
+
+  backBtn.addEventListener('click', () => {
+    popup.style.display = 'none';
+    video.play();
+  });
+
+  // Optional: if user closes tab or clicks back in verification tab,
+  // no automatic popup close here because we can't detect tab focus in this demo.
+</script>
+
+</body>
+</html>
